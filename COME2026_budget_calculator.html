@@ -69,7 +69,8 @@
   <label>Instructors/TAs staying for half the workshop: <input type="number" id="staffHalfCount" value="0"></label>
   <label>Shuttle Bus Rate (per day): <input type="number" id="shuttleRate" value="1800"></label>
   <label>Number of Nights: <input type="number" id="nights" value="11"></label>
-  <label>Catering Rate (per person/day, only breakfast+lunch or breakfast+dinner): <input type="number" id="cateringRate" value="200"></label>
+  <label>Catering Rate (per person/meal): <input type="number" id="cateringRate" value="100"></label>
+  <label>No. of meals: <input type="number" id="mealNo" value="2"></label>
   <label>Local Transport (per instructor): <input type="number" id="localTransportRate" value="350"></label>
   <label>Excursion: <input type="number" id="excursionFee" value="20000"></label>
   <label>Consumables and others: <input type="number" id="consumableFee" value="3000"></label>
@@ -100,7 +101,9 @@
 
     const travel = nonlocalStaff * flightTicket;
     const accommodation = (nonlocalStaff - staffHalf) * accommodationRate * nights + staffHalf * accommodationRate * (nights / 2);
-    const catering = (staff + students) * cateringRate * nights;
+	
+	const mealNo = Number(document.getElementById('mealNo').value);
+    const catering = (staff + students) * cateringRate * nights * mealNo;
     const localTransportRate = Number(document.getElementById('localTransportRate').value);
 	const localTransport = localTransportRate * staff;
 	
@@ -126,7 +129,7 @@
       <div class="section">
         <div class="item">✈️ <strong>Travel:</strong> ¥10,000 × ${nonlocalStaff} = ¥${travel.toLocaleString()}</div>
         <div class="item">🏨 <strong>Accommodation:</strong> Calculated with ${nonlocalStaff - staffHalf} full-stay and ${staffHalf} half-stay staff = ¥${accommodation.toLocaleString()}</div>
-        <div class="item">🍱 <strong>Catering:</strong> ¥${cateringRate} × ${staff + students} × ${nights} days = ¥${catering.toLocaleString()}</div>
+        <div class="item">🍱 <strong>Catering:</strong> ¥${cateringRate} × ${mealNo} × ${staff + students} × ${nights} days = ¥${catering.toLocaleString()}</div>
         <div class="item">🚕 <strong>Local Transport:</strong> ¥${cateringRate} × ${nonlocalStaff} = ¥${localTransport.toLocaleString()}</div>
         <div class="item">🚌 <strong>Shuttle Bus:</strong> ¥${shuttleRate} × ${nights} days = ¥${shuttleBus.toLocaleString()}</div>
         <div class="item">🎉 <strong>Excursion:</strong> ¥${excursion.toLocaleString()}</div>
