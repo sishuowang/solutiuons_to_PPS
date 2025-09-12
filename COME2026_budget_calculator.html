@@ -61,15 +61,22 @@
 <p><em>Note: The total available funds is roughly ¥300,000 (from SYSU) + HK$100,000 (from CUHK) ≈ ¥391,000 ≈ €47,000.</em></p>
 
 <div class="section">
-  <label>Instructors/TAs: <input type="number" id="staffCount" value="17"></label>
-  <label>Replaced by local instructors/TAs: <input type="number" id="no_replaced" value="2"></label>
-  <label>Students: <input type="number" id="studentCount" value="35"></label>
-  <label>Accommodation Rate (per instructor/TA per night, breakfast included): <input type="number" id="accommodationRate" value="600"></label>
+  <label>Flight ticket (default 10000): <input type="number" id="flightTicket" value="10000"></label>
+  <label>Instructors/TAs (default 17): <input type="number" id="staffCount" value="17"></label>
+  <label>Replaced by local instructors/TAs (default 2): <input type="number" id="no_replaced" value="2"></label>
+  <label>Students (default 35): <input type="number" id="studentCount" value="35"></label>
+  <label>Accommodation Rate (per instructor/TA per night, breakfast excluded): <input type="number" id="accommodationRate" value="600"></label>
   <label>Instructors/TAs staying for half the workshop: <input type="number" id="staffHalfCount" value="0"></label>
-  <label>Shuttle Bus Rate (per day): <input type="number" id="shuttleRate" value="1500"></label>
+  <label>Shuttle Bus Rate (per day): <input type="number" id="shuttleRate" value="1800"></label>
   <label>Number of Nights: <input type="number" id="nights" value="11"></label>
-  <label>Catering Rate (per person per day): <input type="number" id="cateringRate" value="200"></label>
-  <label>Registration Fee (per student, accommodation excluded): <input type="number" id="registrationFee" value="2000"></label>
+  <label>Catering Rate (per person/day, only breakfast+lunch or breakfast+dinner): <input type="number" id="cateringRate" value="200"></label>
+  <label>Local Transport (per instructor): <input type="number" id="localTransportRate" value="350"></label>
+  <label>Excursion: <input type="number" id="excursionFee" value="20000"></label>
+  <label>Consumables and others: <input type="number" id="consumableFee" value="3000"></label>
+  <label>
+  Registration Fee (accommodation excluded):
+  <input type="number" id="registrationFee" value="2500" style="color: red;">
+</label>
 </div>
 
 <button onclick="calculateBudget()">Calculate Budget</button>
@@ -78,7 +85,8 @@
 
 <script>
   function calculateBudget() {
-    const staff = Number(document.getElementById('staffCount').value);
+    const flightTicket = Number(document.getElementById('flightTicket').value);
+	const staff = Number(document.getElementById('staffCount').value);
     const no_replaced = Number(document.getElementById('no_replaced').value);
     const staffHalf = Number(document.getElementById('staffHalfCount').value);
     const students = Number(document.getElementById('studentCount').value);
@@ -88,15 +96,17 @@
     const registrationFee = Number(document.getElementById('registrationFee').value);
     const shuttleRate = Number(document.getElementById('shuttleRate').value);
 
-    const activeStaff = staff - no_replaced;
+    const nonlocalStaff = staff - no_replaced;
 
-    const travel = activeStaff * 10000;
-    const accommodation = (activeStaff - staffHalf) * accommodationRate * nights + staffHalf * accommodationRate * (nights / 2);
+    const travel = nonlocalStaff * flightTicket;
+    const accommodation = (nonlocalStaff - staffHalf) * accommodationRate * nights + staffHalf * accommodationRate * (nights / 2);
     const catering = (staff + students) * cateringRate * nights;
-    const localTransport = 6000;
+    const localTransportRate = Number(document.getElementById('localTransportRate').value);
+	const localTransport = localTransportRate * staff;
+	
     const shuttleBus = shuttleRate * nights;
-    const excursion = 20000;
-    const consumables = 3000;
+    const excursion = Number(document.getElementById('excursionFee').value);
+    const consumables = Number(document.getElementById('consumableFee').value);
 
     const totalExpenses = travel + accommodation + catering + localTransport + shuttleBus + excursion + consumables;
     const income = students * registrationFee;
@@ -114,13 +124,13 @@
 
     document.getElementById('output').innerHTML = `
       <div class="section">
-        <div class="item">✈️ <strong>Travel:</strong> ¥10,000 × ${activeStaff} = ¥${travel.toLocaleString()}</div>
-        <div class="item">🏨 <strong>Accommodation:</strong> Calculated with ${activeStaff - staffHalf} full-stay and ${staffHalf} half-stay staff = ¥${accommodation.toLocaleString()}</div>
+        <div class="item">✈️ <strong>Travel:</strong> ¥10,000 × ${nonlocalStaff} = ¥${travel.toLocaleString()}</div>
+        <div class="item">🏨 <strong>Accommodation:</strong> Calculated with ${nonlocalStaff - staffHalf} full-stay and ${staffHalf} half-stay staff = ¥${accommodation.toLocaleString()}</div>
         <div class="item">🍱 <strong>Catering:</strong> ¥${cateringRate} × ${staff + students} × ${nights} days = ¥${catering.toLocaleString()}</div>
-        <div class="item">🚕 <strong>Local Transport:</strong> Fixed = ¥${localTransport.toLocaleString()}</div>
+        <div class="item">🚕 <strong>Local Transport:</strong> ¥${cateringRate} × ${nonlocalStaff} = ¥${localTransport.toLocaleString()}</div>
         <div class="item">🚌 <strong>Shuttle Bus:</strong> ¥${shuttleRate} × ${nights} days = ¥${shuttleBus.toLocaleString()}</div>
-        <div class="item">🎉 <strong>Excursion:</strong> Fixed = ¥${excursion.toLocaleString()}</div>
-        <div class="item">🧃 <strong>Consumables:</strong> Fixed = ¥${consumables.toLocaleString()}</div>
+        <div class="item">🎉 <strong>Excursion:</strong> ¥${excursion.toLocaleString()}</div>
+        <div class="item">🧃 <strong>Consumables and others:</strong> ¥${consumables.toLocaleString()}</div>
       </div>
 
       <div class="section">
