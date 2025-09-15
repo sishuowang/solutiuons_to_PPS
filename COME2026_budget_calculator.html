@@ -106,7 +106,7 @@
 	const mealNo = Number(document.getElementById('mealNo').value);
     const catering = (staff + students) * cateringRate * nights * mealNo;
     const localTransportRate = Number(document.getElementById('localTransportRate').value);
-	const localTransport = localTransportRate * staff;
+	const localTransport = localTransportRate * nonlocalStaff;
 	
     const shuttleBus = shuttleRate * nights;
     const excursion = Number(document.getElementById('excursionFee').value);
@@ -131,7 +131,7 @@
         <div class="item">✈️ <strong>Travel:</strong> ¥10,000 × ${nonlocalStaff} = ¥${travel.toLocaleString()}</div>
         <div class="item">🏨 <strong>Accommodation:</strong> Calculated with ${nonlocalStaff - staffHalf} full-stay and ${staffHalf} half-stay staff = ¥${accommodation.toLocaleString()}</div>
         <div class="item">🍱 <strong>Catering:</strong> ¥${cateringRate} × ${mealNo} × ${staff + students} × ${nights} days = ¥${catering.toLocaleString()}</div>
-        <div class="item">🚕 <strong>Local Transport:</strong> ¥${cateringRate} × ${nonlocalStaff} = ¥${localTransport.toLocaleString()}</div>
+        <div class="item">🚕 <strong>Local Transport:</strong> ¥${localTransportRate} × ${nonlocalStaff} = ¥${localTransport.toLocaleString()}</div>
         <div class="item">🚌 <strong>Shuttle Bus:</strong> ¥${shuttleRate} × ${nights} days = ¥${shuttleBus.toLocaleString()}</div>
         <div class="item">🎉 <strong>Excursion:</strong> ¥${excursion.toLocaleString()}</div>
         <div class="item">🧃 <strong>Consumables and others:</strong> ¥${consumables.toLocaleString()}</div>
